@@ -37,7 +37,7 @@ public class Individual : MonoBehaviour
         }
     }
 
-    private bool IsInfected => _virusInstance != null;
+    public bool IsInfected => _virusInstance != null;
     public bool CanTransmit => infectStatus is InfectStatus.Incubation or InfectStatus.Ill;
 
     private float RealDeathRate

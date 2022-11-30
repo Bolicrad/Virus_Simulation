@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ public class Plaza : MonoBehaviour
     private List<Individual> _crowd;
     public List<Button> ChooseButtons;
     public Button StartDayButton;
-    
+    public TMP_Text textContainer;
     
     
     private int _dayCount = 0;
@@ -108,14 +109,20 @@ public class Plaza : MonoBehaviour
         }
 
         StartDayButton.interactable = true;
-        
-        Debug.Log($"At the End of Day {_dayCount}");
+
+        int dieCount = _crowd.FindAll(e => e.infectStatus == InfectStatus.Death).Count;
+        int illCount = _crowd.FindAll(e => e.IsInfected).Count;
+        int hospitalCount = _crowd.FindAll(e => e.infectStatus == InfectStatus.Hospital).Count;
+        int recoverCount = _crowd.FindAll(e => e.infectStatus == InfectStatus.Recovered).Count;
+
+        textContainer.text =
+            $"At the End of Day {_dayCount}, {illCount} people got infected, {hospitalCount} people went to hospital, {dieCount} people died, {recoverCount} people recovered";
 
         if (_crowd.TrueForAll(e => e.infectStatus is InfectStatus.Recovered or InfectStatus.Death or InfectStatus.Healthy))
         {
             StartDayButton.interactable = false;
             var deaths = _crowd.FindAll(individual => individual.infectStatus == InfectStatus.Death);
-            Debug.Log($"After the pandemic, {deaths.Count} People died, and {_crowd.Count-deaths.Count} recovered.");
+            textContainer.text = $"After the pandemic, {deaths.Count} People died, and {_crowd.Count-deaths.Count} recovered.";
         }
     }
 
@@ -134,6 +141,8 @@ public class Plaza : MonoBehaviour
         {
             chooseButton.gameObject.SetActive(true);
         }
+
+        textContainer.text = "Choose the variant.";
     }
 
 
