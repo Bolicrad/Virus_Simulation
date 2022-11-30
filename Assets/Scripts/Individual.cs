@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -39,7 +40,7 @@ public class Individual : MonoBehaviour
     private bool IsInfected => _virusInstance != null;
     public bool CanTransmit => infectStatus is InfectStatus.Incubation or InfectStatus.Ill;
 
-    public float RealDeathRate
+    private float RealDeathRate
     {
         get
         {
@@ -83,6 +84,14 @@ public class Individual : MonoBehaviour
         infectStatus = InfectStatus.Incubation;
         daysOfInfected = 0;
         return infectStatus;
+    }
+
+    public void Transmit(List<Individual> targets)
+    {
+        foreach (var individual in targets)
+        {
+            individual.GetInfect(_virusInstance);
+        }
     }
 
     private void GoOutSide()

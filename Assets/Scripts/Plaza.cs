@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -10,6 +8,8 @@ public class Plaza : MonoBehaviour
     private ObjectPool<GameObject> _individualPool;
 
     public VirusPreset preset;
+
+    private List<Individual> _crowd;
 
     private void Awake()
     {
@@ -41,6 +41,35 @@ public class Plaza : MonoBehaviour
     private void Start()
     {
         
+    }
+
+    public void StartSimulate()
+    {
+        for (var i = 0; i < 100; i++)
+        {
+            _crowd.Add(_individualPool.Get().GetComponent<Individual>());
+        }
+    }
+
+    public void StartDay()
+    {
+        foreach (var individual in _crowd)
+        {
+            individual.StartDay();
+        }
+    }
+
+    public void Transmission()
+    {
+        //Transmission logic
+    }
+
+    public void EndDay()
+    {
+        foreach (var individual in _crowd)
+        {
+         individual.EndDay();   
+        }
     }
 
 
