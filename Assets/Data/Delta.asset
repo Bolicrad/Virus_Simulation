@@ -17,4 +17,4 @@ MonoBehaviour:
   daysOfIncubation: 5
   daysToRecover: 10
   hospitalRate: 0.3
-  deathRate: 0.02
+  deathRate: 0.015
