@@ -82,14 +82,20 @@ public class Individual : MonoBehaviour
         
         _virusInstance = new Virus(virus);
         infectStatus = InfectStatus.Incubation;
+        Debug.Log($"Individual {GetInstanceID()} is now infected by virus:");
+        _virusInstance.DebugPrint();
         daysOfInfected = 0;
         return infectStatus;
     }
 
     public void Transmit(List<Individual> targets)
     {
-        foreach (var individual in targets)
+        var num = Mathf.FloorToInt(_virusInstance.R0);
+        var possibility = _virusInstance.R0 - num;
+        if (Random.Range(0f, 1f) > possibility) num += 1;
+        for (int i = 0; i < num; i++)
         {
+            var individual = targets[Random.Range(0, targets.Count)];
             individual.GetInfect(_virusInstance);
         }
     }
@@ -116,7 +122,7 @@ public class Individual : MonoBehaviour
     {
         //AS is
         infectStatus = InfectStatus.Death;
-        Debug.Log($"Individual {GetInstanceID()} Died at age of ${age}, after {daysOfInfected} days of infection of the virus:\n");
+        Debug.Log($"Individual {GetInstanceID()} Died at age of {age}, after {daysOfInfected} days of infection of the virus:\n");
         _virusInstance.DebugPrint();
     }
 
@@ -167,7 +173,9 @@ public class Individual : MonoBehaviour
         }
         
         //survived today
-        if (daysOfInfected > _virusInstance.DaysOfIncubation + _virusInstance.DaysToRecover)
+        if (daysOfInfected > 
+            Random.Range(_virusInstance.DaysToRecover + _virusInstance.DaysOfIncubation/2, 
+                _virusInstance.DaysToRecover+ 3*_virusInstance.DaysOfIncubation/2))
         {
             Recover();
         }
@@ -181,6 +189,7 @@ public class Individual : MonoBehaviour
     {
         age = Random.Range(0, 80);
         infectStatus = InfectStatus.Healthy;
+        daysOfInfected = 0;
         _virusInstance = null;
     }
 
